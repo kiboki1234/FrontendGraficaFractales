@@ -5,6 +5,7 @@ export default function SierpinskiTriangle() {
   const [width, setWidth] = useState(500);
   const [height, setHeight] = useState(500);
   const [depth, setDepth] = useState(4);
+  const [color, setColor] = useState("#00ff00"); // Nuevo estado para el color
   const canvasRef = useRef(null);
 
   const fetchSierpinski = useCallback(async () => {
@@ -52,8 +53,10 @@ export default function SierpinskiTriangle() {
     ctx.clearRect(0, 0, width, height);
     ctx.beginPath();
 
+    const colorRGB = hexToRGB(color);
+
     triangles.forEach(triangle => {
-      if (triangle.length === 3) { 
+      if (triangle.length === 3) {
         const [p1, p2, p3] = triangle;
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
@@ -64,9 +67,18 @@ export default function SierpinskiTriangle() {
       }
     });
 
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = `rgb(${colorRGB.r}, ${colorRGB.g}, ${colorRGB.b})`;
     ctx.lineWidth = 2;
     ctx.stroke();
+  };
+
+  const hexToRGB = (hex) => {
+    const bigint = parseInt(hex.slice(1), 16);
+    return {
+      r: (bigint >> 16) & 255,
+      g: (bigint >> 8) & 255,
+      b: bigint & 255,
+    };
   };
 
   return (
@@ -124,6 +136,20 @@ export default function SierpinskiTriangle() {
                 }}
                 className="form-control bg-secondary text-light"
                 placeholder="Profundidad"
+              />
+            </div>
+          </div>
+
+          {/* 🔹 Selector de color */}
+          <div className="row g-3 mt-3">
+            <div className="col-md-12 text-center">
+              <label className="form-label">Color del fractal</label>
+              <input
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="form-control form-control-color mx-auto"
+                style={{ width: "60px", height: "40px" }}
               />
             </div>
           </div>

@@ -5,6 +5,7 @@ import Koch from "./components/KochViewer";
 import Sierpinski from "./components/SierpinskiViewer";
 import Tree from "./components/TreeViewer";
 import Home from "./components/Home";
+import Prism from "./components/Prism";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function App() {
@@ -38,6 +39,9 @@ export default function App() {
                 <li className="nav-item">
                   <NavLink to="/Tree" className="nav-link">Árbol</NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink to="/AnalisisMatematico" className="nav-link">Analisis matematico</NavLink>
+                </li>
               </ul>
             </div>
           </div>
@@ -54,6 +58,7 @@ export default function App() {
               <Route path="/Koch" element={<Koch />} />
               <Route path="/Sierpinski" element={<Sierpinski />} />
               <Route path="/Tree" element={<Tree />} />
+              <Route path="/AnalisisMatematico" element={<Prism />} />
             </Routes>
           </div>
         </div>

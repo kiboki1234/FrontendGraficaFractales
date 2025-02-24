@@ -5,6 +5,7 @@ export default function KochCurve() {
   const [width, setWidth] = useState(500);
   const [height, setHeight] = useState(500);
   const [depth, setDepth] = useState(4);
+  const [color, setColor] = useState("#ff0000"); // Nuevo estado para el color
   const canvasRef = useRef(null);
 
   const fetchKoch = useCallback(async () => {
@@ -49,8 +50,10 @@ export default function KochCurve() {
     ctx.clearRect(0, 0, width, height);
     ctx.beginPath();
 
+    const colorRGB = hexToRGB(color);
+
     segments.forEach(segment => {
-      if (segment.length === 2) { 
+      if (segment.length === 2) {
         const [start, end] = segment;
         ctx.moveTo(start.x, start.y);
         ctx.lineTo(end.x, end.y);
@@ -59,9 +62,18 @@ export default function KochCurve() {
       }
     });
 
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = `rgb(${colorRGB.r}, ${colorRGB.g}, ${colorRGB.b})`;
     ctx.lineWidth = 2;
     ctx.stroke();
+  };
+
+  const hexToRGB = (hex) => {
+    const bigint = parseInt(hex.slice(1), 16);
+    return {
+      r: (bigint >> 16) & 255,
+      g: (bigint >> 8) & 255,
+      b: bigint & 255,
+    };
   };
 
   return (
@@ -119,6 +131,20 @@ export default function KochCurve() {
                 }}
                 className="form-control bg-secondary text-light"
                 placeholder="Profundidad"
+              />
+            </div>
+          </div>
+
+          {/* 🔹 Selector de color */}
+          <div className="row g-3 mt-3">
+            <div className="col-md-12 text-center">
+              <label className="form-label">Color de la línea</label>
+              <input
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="form-control form-control-color mx-auto"
+                style={{ width: "60px", height: "40px" }}
               />
             </div>
           </div>
