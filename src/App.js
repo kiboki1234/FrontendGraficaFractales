@@ -7,6 +7,7 @@ import Tree from "./components/TreeViewer";
 import Home from "./components/Home";
 import Prism from "./components/Prism";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js"; // 🔹 Importar Bootstrap JS
 
 export default function App() {
   return (
@@ -16,7 +17,15 @@ export default function App() {
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
           <div className="container">
             <a className="navbar-brand" href="/">Fractales</a>
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
               <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="navbarNav">
@@ -40,7 +49,7 @@ export default function App() {
                   <NavLink to="/Tree" className="nav-link">Árbol</NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink to="/AnalisisMatematico" className="nav-link">Analisis matematico</NavLink>
+                  <NavLink to="/AnalisisMatematico" className="nav-link">Análisis matemático</NavLink>
                 </li>
               </ul>
             </div>
@@ -52,7 +61,7 @@ export default function App() {
           <h1 className="display-4 fw-bold text-primary mb-4">Explora los Fractales</h1>
           <div className="card bg-secondary text-light p-4 shadow-lg">
             <Routes>
-              <Route path="/" element={<Home />} />  {/* 🔹 Nueva Página de Inicio */}
+              <Route path="/" element={<Home />} />
               <Route path="/Mandelbrot" element={<Mandelbrot />} />
               <Route path="/Julia" element={<Julia />} />
               <Route path="/Koch" element={<Koch />} />
@@ -65,12 +74,8 @@ export default function App() {
 
         {/* 🔹 Pie de Página */}
         <footer className="bg-primary text-light text-center py-3 mt-4">
-          <p className="mb-0">
-            <strong>Trabajo realizado por:</strong> Chiliquinga Yeshua, Espin Andres, Marin Josue, Salcedo Micaela
-          </p>
-          <p className="mb-0">
-            <strong>Materia:</strong> Computación Gráfica
-          </p>
+          <p className="mb-0"><strong>Trabajo realizado por:</strong> Chiliquinga Yeshua, Espin Andres, Marin Josue, Salcedo Micaela</p>
+          <p className="mb-0"><strong>Materia:</strong> Computación Gráfica</p>
         </footer>
       </div>
     </Router>
