@@ -10,7 +10,7 @@ export default function Mandelbrot() {
   const fetchMandelbrot = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/mandelbrot?width=${width}&height=${height}&maxIter=${maxIter}`
+        `https://backendgraficfractales.onrender.com/api/mandelbrot?width=${width}&height=${height}&maxIter=${maxIter}`
       );
       const data = await response.json();
       drawMandelbrot(data.data);

@@ -15,7 +15,7 @@ export default function KochCurve() {
       console.log(`Fetching Koch Curve: center=${center}, size=${size}, depth=${depth}`);
 
       const response = await fetch(
-        `http://localhost:5000/api/koch?center=${encodeURIComponent(center)}&size=${size}&depth=${depth}`
+        `https://backendgraficfractales.onrender.com/api/koch?center=${encodeURIComponent(center)}&size=${size}&depth=${depth}`
       );
 
       if (!response.ok) {

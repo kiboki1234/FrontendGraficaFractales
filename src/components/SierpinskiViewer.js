@@ -18,7 +18,7 @@ export default function SierpinskiTriangle() {
       console.log(`Fetching Sierpinski Triangle: points=${points}, depth=${depth}`);
 
       const response = await fetch(
-        `http://localhost:5000/api/sierpinski?points=${encodeURIComponent(points)}&depth=${depth}`
+        `https://backendgraficfractales.onrender.com/api/sierpinski?points=${encodeURIComponent(points)}&depth=${depth}`
       );
 
       if (!response.ok) {

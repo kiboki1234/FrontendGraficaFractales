@@ -16,7 +16,7 @@ export default function TreeFractal() {
       console.log(`Fetching Tree Fractal: start=${start}, length=${length}, angle=${angle}, depth=${depth}`);
 
       const response = await fetch(
-        `http://localhost:5000/api/tree?start=${encodeURIComponent(start)}&length=${length}&angle=${angle}&depth=${depth}`
+        `https://backendgraficfractales.onrender.com/api/tree?start=${encodeURIComponent(start)}&length=${length}&angle=${angle}&depth=${depth}`
       );
 
       if (!response.ok) {

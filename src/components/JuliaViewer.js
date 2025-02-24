@@ -12,7 +12,7 @@ export default function JuliaSet() {
   const fetchJulia = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/julia?width=${width}&height=${height}&realC=${realC}&imagC=${imagC}&maxIter=${maxIter}`
+        `https://backendgraficfractales.onrender.com/api/julia?width=${width}&height=${height}&realC=${realC}&imagC=${imagC}&maxIter=${maxIter}`
       );
       const data = await response.json();
       drawJulia(data.data);
