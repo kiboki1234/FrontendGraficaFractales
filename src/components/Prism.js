@@ -88,6 +88,66 @@ const fractals = {
     ...kochSegment(d, p2, depth - 1)
   ];
 }`
+  },
+
+  sierpinski: {
+    name: "Triángulo de Sierpiński",
+    equation: "A(n+1) = A(n) / 2",
+    explanation: "El triángulo de Sierpiński se construye dividiendo un triángulo en cuatro partes iguales y eliminando la sección central.",
+    theory: "Cada iteración subdivide un triángulo en cuatro triángulos más pequeños, eliminando el triángulo central en cada paso.",
+    dimension: "Su dimensión fractal es aproximadamente log(3) / log(2) ≈ 1.58.",
+    properties: [
+      "Construido mediante recursión matemática.",
+      "Aparece en estructuras naturales como cristales y árboles.",
+      "Tiene una relación con el conjunto de Pascal."
+    ],
+    applications: [
+      "Diseño de estructuras arquitectónicas ligeras.",
+      "Modelado de redes neuronales.",
+      "Compresión de datos en imágenes fractales."
+    ],
+    formulaCode: `function sierpinski(points, depth) {
+  if (depth === 0) return [points];
+  const [a, b, c] = points;
+  const mid1 = midpoint(a, b);
+  const mid2 = midpoint(b, c);
+  const mid3 = midpoint(a, c);
+  return [
+    ...sierpinski([a, mid1, mid3], depth - 1),
+    ...sierpinski([mid1, b, mid2], depth - 1),
+    ...sierpinski([mid3, mid2, c], depth - 1)
+  ];
+}`
+  },
+
+  tree: {
+    name: "Árbol Fractal",
+    equation: "L(n+1) = r * L(n)",
+    explanation: "El árbol fractal se genera dividiendo cada rama en dos ramas más pequeñas con un ángulo específico.",
+    theory: "Cada iteración toma una rama existente y la divide en dos ramas más pequeñas, aplicando un ángulo de separación fijo.",
+    dimension: "Su dimensión fractal varía entre 1.5 y 2.0, dependiendo de la relación de reducción entre ramas.",
+    properties: [
+      "Imita el crecimiento natural de los árboles.",
+      "Basado en la geometría recursiva.",
+      "Se pueden variar los ángulos y longitudes para efectos diferentes."
+    ],
+    applications: [
+      "Simulación de crecimiento de plantas y árboles.",
+      "Animaciones y gráficos generativos.",
+      "Visualización de estructuras en biología."
+    ],
+    formulaCode: `function treeFractal(start, length, angle, depth) {
+  if (depth === 0) return [];
+  const end = {
+    x: start.x + length * Math.cos(angle),
+    y: start.y - length * Math.sin(angle),
+  };
+  return [
+    [start, end],
+    ...treeFractal(end, length * 0.7, angle - Math.PI / 6, depth - 1),
+    ...treeFractal(end, length * 0.7, angle + Math.PI / 6, depth - 1)
+  ];
+}`
   }
 };
 
@@ -121,26 +181,6 @@ export default function MathAnalysis() {
 
           <h5 className="text-warning mt-4">Explicación</h5>
           <p>{fractals[selectedFractal].explanation}</p>
-
-          <h5 className="text-warning mt-4">Teoría Matemática</h5>
-          <p>{fractals[selectedFractal].theory}</p>
-
-          <h5 className="text-warning mt-4">Dimensión Fractal</h5>
-          <p>{fractals[selectedFractal].dimension}</p>
-
-          <h5 className="text-warning mt-4">Propiedades</h5>
-          <ul>
-            {fractals[selectedFractal].properties.map((prop, index) => (
-              <li key={index}>{prop}</li>
-            ))}
-          </ul>
-
-          <h5 className="text-warning mt-4">Aplicaciones</h5>
-          <ul>
-            {fractals[selectedFractal].applications.map((app, index) => (
-              <li key={index}>{app}</li>
-            ))}
-          </ul>
 
           <h5 className="text-warning mt-4">Código</h5>
           <pre className="rounded p-3 bg-secondary">
