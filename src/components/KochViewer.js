@@ -2,18 +2,28 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function KochCurve() {
-  const [width, setWidth] = useState(500);
-  const [height, setHeight] = useState(500);
+  const [canvasSize, setCanvasSize] = useState({ width: 500, height: 500 });
   const [depth, setDepth] = useState(4);
-  const [color, setColor] = useState("#ff0000"); // Nuevo estado para el color
+  const [color, setColor] = useState("#ff0000"); 
   const canvasRef = useRef(null);
+
+  // 🔹 Ajustar dinámicamente el tamaño del canvas según el tamaño de pantalla
+  useEffect(() => {
+    const updateCanvasSize = () => {
+      const screenWidth = window.innerWidth;
+      const newSize = screenWidth < 768 ? 300 : 500;
+      setCanvasSize({ width: newSize, height: newSize });
+    };
+
+    updateCanvasSize();
+    window.addEventListener("resize", updateCanvasSize);
+    return () => window.removeEventListener("resize", updateCanvasSize);
+  }, []);
 
   const fetchKoch = useCallback(async () => {
     try {
-      const center = JSON.stringify({ x: width / 2, y: height / 2 });
-      const size = Math.min(width, height) * 0.8;
-
-      console.log(`Fetching Koch Curve: center=${center}, size=${size}, depth=${depth}`);
+      const center = JSON.stringify({ x: canvasSize.width / 2, y: canvasSize.height / 2 });
+      const size = Math.min(canvasSize.width, canvasSize.height) * 0.8;
 
       const response = await fetch(
         `https://backendgraficfractales.onrender.com/api/koch?center=${encodeURIComponent(center)}&size=${size}&depth=${depth}`
@@ -24,21 +34,17 @@ export default function KochCurve() {
       }
 
       const data = await response.json();
-      console.log("Respuesta de la API:", data);
-
       drawKoch(data.result);
     } catch (error) {
       console.error("Error fetching Koch Curve:", error);
     }
-  }, [width, height, depth]);
+  }, [canvasSize, depth]);
 
   useEffect(() => {
     fetchKoch();
-  }, [fetchKoch]);
+  }, [canvasSize, depth, color]);
 
   const drawKoch = (segments) => {
-    console.log("Segmentos recibidos:", segments);
-
     if (!segments || segments.length === 0) {
       console.error("No hay segmentos para dibujar.");
       return;
@@ -47,7 +53,7 @@ export default function KochCurve() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
     ctx.beginPath();
 
     const colorRGB = hexToRGB(color);
@@ -57,8 +63,6 @@ export default function KochCurve() {
         const [start, end] = segment;
         ctx.moveTo(start.x, start.y);
         ctx.lineTo(end.x, end.y);
-      } else {
-        console.error("Segmento inválido:", segment);
       }
     });
 
@@ -78,33 +82,12 @@ export default function KochCurve() {
 
   return (
     <div className="container text-light py-5">
-      <h1 className="text-center display-4 fw-bold text-warning text-center mb-3">Curva de Koch</h1>
+      <h1 className="text-center display-4 fw-bold text-warning mb-3">Curva de Koch</h1>
 
-      {/* 🔹 Formulario estilizado dentro de una card */}
       <div className="card bg-dark text-light shadow-lg p-4 mb-4">
         <div className="card-body">
           <h3 className="text-warning text-center mb-3">Configuración</h3>
           <div className="row g-3">
-            <div className="col-md-4">
-              <label className="form-label">Ancho</label>
-              <input
-                type="number"
-                value={width}
-                onChange={(e) => setWidth(parseInt(e.target.value))}
-                className="form-control bg-secondary text-light"
-                placeholder="Ancho"
-              />
-            </div>
-            <div className="col-md-4">
-              <label className="form-label">Alto</label>
-              <input
-                type="number"
-                value={height}
-                onChange={(e) => setHeight(parseInt(e.target.value))}
-                className="form-control bg-secondary text-light"
-                placeholder="Alto"
-              />
-            </div>
             <div className="col-md-4">
               <label className="form-label">Profundidad</label>
               <input
@@ -112,14 +95,11 @@ export default function KochCurve() {
                 value={depth}
                 onChange={(e) => {
                   const newValue = e.target.value;
-
                   if (newValue === "") {
-                    setDepth(""); // Permitir vacío temporalmente
+                    setDepth(""); 
                     return;
                   }
-
                   const newDepth = parseInt(newValue);
-
                   if (!isNaN(newDepth) && newDepth >= 0 && newDepth <= 10) {
                     setDepth(newDepth);
                   } else {
@@ -127,29 +107,26 @@ export default function KochCurve() {
                   }
                 }}
                 onBlur={() => {
-                  if (depth === "") setDepth(0); // Si queda vacío, restablecer a 0
+                  if (depth === "") setDepth(0);
                 }}
                 className="form-control bg-secondary text-light"
                 placeholder="Profundidad"
               />
             </div>
-          </div>
 
-          {/* 🔹 Selector de color */}
-          <div className="row g-3 mt-3">
-            <div className="col-md-12 text-center">
+            {/* 🔹 Selector de color */}
+            <div className="col-md-4">
               <label className="form-label">Color de la línea</label>
               <input
                 type="color"
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
-                className="form-control form-control-color mx-auto"
+                className="form-control form-control-color"
                 style={{ width: "60px", height: "40px" }}
               />
             </div>
           </div>
 
-          {/* 🔹 Botón estilizado */}
           <div className="text-center mt-4">
             <button onClick={fetchKoch} className="btn btn-primary btn-lg px-4">
               Generar Curva
@@ -158,10 +135,26 @@ export default function KochCurve() {
         </div>
       </div>
 
-      {/* 🔹 Canvas estilizado */}
-      <div className="text-center">
-        <canvas ref={canvasRef} width={width} height={height} className="border border-light shadow-lg rounded" />
+      {/* 🔹 Canvas ajustado dinámicamente */}
+      <div className="d-flex justify-content-center">
+        <canvas
+          ref={canvasRef}
+          width={canvasSize.width}
+          height={canvasSize.height}
+          className="border border-light shadow-lg rounded canvas-responsive"
+        />
       </div>
+
+      {/* 🔹 CSS para hacer el canvas responsivo */}
+      <style>
+        {`
+          .canvas-responsive {
+            width: 100%;
+            max-width: 500px; 
+            height: auto;
+          }
+        `}
+      </style>
     </div>
   );
 }
